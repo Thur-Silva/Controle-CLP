@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lummen – Dashboard de Resultados</title>
+  <link rel="icon" href="../img/logo-estatica.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --lummen-primary: #005792; 
+      --lummen-secondary: #00204A; 
+      --lummen-accent: #FDB44B;
+      --status-valid: #28a745; 
+      --status-invalid: #dc3545; 
+      --status-processing: #007bff; 
+      
+      --neutral-lightest: #f8f9fa;
+      --neutral-light: #e9ecef;
+      --neutral-medium: #ced4da;
+      --neutral-dark: #495057;
+      --neutral-darkest: #212529;
+
+      --text-primary: #333;
+      --text-secondary: #555;
+      --text-on-dark-bg: #ffffff;
+
+      --bg-main: var(--neutral-lightest);
+      --bg-card: #ffffff;
+      --bg-header: var(--neutral-darkest);
+
+      --border-radius-sm: 4px;
+      --border-radius-md: 8px;
+      --border-radius-lg: 16px;
+
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+
+      --font-family-base: 'Roboto', sans-serif;
+      --transition-speed: 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family-base);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ========================= HEADER ========================= */
+    header {
+      background-color:#ffffff;
+      color: var(--text-on-dark-bg);
+      padding: 2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header .logo-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: black;
+    }
+
+    header .logo-link #logo-img { display: block; }
+    header .logo-link #logo-gif { display: none; }
+    header .logo-link:hover #logo-img { display: none; }
+    header .logo-link:hover #logo-gif { display: block; }
+
+    header #logo-img, header #logo-gif {
+      height: 40px;
+      margin-right: 0.75rem;
+      transition: transform var(--transition-speed);
+    }
+    header .logo-link:hover #logo-gif {
+        transform: scale(1.1);
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    header nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    header .menu-link {
+      color: black;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius-sm);
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+
+    header .menu-link img {
+      height: 20px;
+      margin-right: 0.5rem;
+      filter: invert(90%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(100%) contrast(90%); /* Adequar ícones para fundo escuro */
+    }
+    
+    header .menu-link .static-img { display: block; }
+    header .menu-link .gif-img { display: none; }
+    header .menu-link:hover .static-img { display: none; }
+    header .menu-link:hover .gif-img { display: block; }
+
+    header .menu-link:hover, header .menu-link.active {
+       transform: scale(1.05);
+    }
+    header .menu-link:hover img {
+        filter: none; /* Cor original do gif no hover */
+    }
+
+    /* ========================= MAIN CONTENT AREA ========================= */
+    .dashboard-container {
+      flex-grow: 1;
+      padding: 2rem;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    #page-title-container {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--neutral-light);
+    }
+    
+    #page-title {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--lummen-secondary);
+    }
+    
+    #last-updated-time {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    /* Layout Principal do Dashboard */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .main-column {
+        grid-column: span 2; /* Ocupa mais espaço */
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .sidebar-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 1200px) {
+        .main-column { grid-column: span 1; }
+    }
+     @media (max-width: 768px) {
+        .results-grid {
+            grid-template-columns: 1fr; /* Stack em telas menores */
+        }
+    }
+
+    /* Card Genérico */
+    .data-card {
+      background-color: var(--bg-card);
+      border-radius: var(--border-radius-md);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    }
+    .data-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .data-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--neutral-light);
+    }
+
+    .data-card-header h3 {
+      font-size: 1.25rem;
+      color: var(--lummen-primary);
+      font-weight: 500;
+    }
+    
+    .data-card-header .icon { /* Placeholder for icons */
+        font-size: 1.5rem;
+        color: var(--lummen-accent);
+    }
+
+
+    /* Painel de Estatísticas Chave (KPIs) */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem; /* Add some space below KPIs */
+    }
+
+    .kpi-card {
+      background-color: var(--bg-card);
+      border-radius: var(--border-radius-sm);
+      padding: 1rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      border-left: 5px solid var(--lummen-primary); /* Destaque lateral */
+    }
+    
+    .kpi-card h4 {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .kpi-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--lummen-secondary);
+    }
+
+    .kpi-card .value.valid { color: var(--status-valid); border-left-color: var(--status-valid); }
+    .kpi-card .value.invalid { color: var(--status-invalid); border-left-color: var(--status-invalid); }
+    .kpi-card.valid { border-left-color: var(--status-valid); }
+    .kpi-card.invalid { border-left-color: var(--status-invalid); }
+    .kpi-card.total { border-left-color: var(--status-processing); }
+    .kpi-card.rate { border-left-color: var(--lummen-accent); }
+
+
+    /* Progresso Visual (Ex: Taxa de Acerto) */
+    .progress-indicator-container {
+        margin-top: 0.75rem;
+    }
+    .progress-bar-wrapper {
+      background-color: var(--neutral-light);
+      border-radius: var(--border-radius-sm);
+      overflow: hidden;
+      height: 20px;
+    }
+    .progress-bar {
+      background-color: var(--status-valid);
+      width: 0%; /* Será atualizado via JS */
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.8rem;
+      font-weight: bold;
+      transition: width 0.5s ease-in-out;
+    }
+    .progress-bar.low { background-color: var(--lummen-accent); }
+    .progress-bar.very-low { background-color: var(--status-invalid); }
+
+
+    /* Área de Comparação de Imagens */
+    .image-comparison-section .data-card-header h3 {
+        color: var(--lummen-secondary); /* Cor diferente para esta seção */
+    }
+    
+    .image-comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start; /* Alinha os cards no topo */
+    }
+
+    .image-card {
+      text-align: center;
+      border: 1px solid var(--neutral-medium);
+      padding: 1rem;
+      border-radius: var(--border-radius-sm);
+      background-color: var(--neutral-lightest); /* Fundo levemente diferente para destacar */
+    }
+    
+    .image-card h4 {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .image-card img {
+      width: 100%;
+      max-width: 400px; /* Limite para não ficar gigante */
+      height: auto;
+      border-radius: var(--border-radius-sm);
+      border: 2px solid var(--neutral-light);
+      background-color: var(--neutral-medium); /* Cor de fundo para o placeholder */
+      aspect-ratio: 4/3; /* Mantém a proporção da imagem */
+      object-fit: contain; /* Garante que a imagem caiba sem distorcer */
+    }
+    
+    .image-card.expected-piece {
+        border-left: 5px solid var(--status-processing);
+    }
+    .image-card.read-piece {
+        border-left: 5px solid var(--lummen-accent);
+    }
+
+    /* Indicador de Status da Leitura (Match/Mismatch) */
+    .comparison-status {
+        text-align: center;
+        padding: 1.5rem;
+        margin-top: 1.5rem; /* Adicionado após a sugestão de refatoração */
+        border-radius: var(--border-radius-md);
+    }
+    .comparison-status.match {
+        background-color: var(--status-valid);
+        color: white;
+    }
+    .comparison-status.mismatch {
+        background-color: var(--status-invalid);
+        color: white;
+    }
+    .comparison-status p {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    
+    /* Tabela de histórico (opcional, para expansão) */
+    .history-log-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+    .history-log-table th, .history-log-table td {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--neutral-light);
+        font-size: 0.9rem;
+    }
+    .history-log-table th {
+        background-color: var(--neutral-light);
+        font-weight: 500;
+        color: var(--lummen-secondary);
+    }
+    .history-log-table tbody tr:hover {
+        background-color: var(--neutral-lightest);
+    }
+    .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+    .status-indicator.valid { background-color: var(--status-valid); }
+    .status-indicator.invalid { background-color: var(--status-invalid); }
+
+
+    /* Footer (simples, apenas para completar o layout) */
+    footer {
+        text-align: center;
+        padding: 1.5rem;
+        background-color: var(--neutral-light);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-top: auto; /* Empurra para o final da página */
+    }
+
+    /* Animações sutis */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .data-card, .kpi-card, .image-card {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <a id="Logo" href="../pages/index.html" class="logo-link">
+      <img id="logo-img" class="static-img" src="../img/logo-estatica.png" alt="Logo Estática Lummen">
+      <img id="logo-gif" class="gif-img" src="../img/logo.gif" alt="Logo Animada Lummen">
+      <h1>Lummen</h1>
+    </a>
+    <nav>
+      <a href="../pages/tarefas.html" class="task-link menu-link">
+        <img class="static-img" src="../img/chave-estatica.png" alt="Ícone Chave Estática">
+        <img class="gif-img" src="../img/chave.gif" alt="Ícone Chave Animada">
+        Gerenciar Tarefas
+      </a>
+      <a href="../pages/actions.html" class="action-link menu-link">
+        <img class="static-img" src="../img/engine-estatica.png" alt="Ícone Engine Estática">
+        <img class="gif-img" src="../img/engine.gif" alt="Ícone Engine Animada">
+        Gerenciar Ações
+      </a>
+      </nav>
+  </header>
+
+  <main class="dashboard-container">
+    <div id="page-title-container">
+      <h2 id="page-title">Resultados – Carregando...</h2>
+      <p id="last-updated-time">Última atualização: --:--:--</p>
+    </div>
+
+    <div class="results-grid">
+        <div class="main-column">
+            <section class="kpi-dashboard data-card">
+                 <div class="data-card-header">
+                    <h3>Visão Geral da Produção</h3>
+                    </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card valid">
+                    <h4>Válidas</h4>
+                    <p id="valid-count" class="value">0</p>
+                    </div>
+                    <div class="kpi-card invalid">
+                    <h4>Inválidas</h4>
+                    <p id="invalid-count" class="value">0</p>
+                    </div>
+                    <div class="kpi-card total">
+                    <h4>Total Processado</h4>
+                    <p id="total-count" class="value">0</p>
+                    </div>
+                    <div class="kpi-card rate">
+                    <h4>Taxa de Acerto</h4>
+                    <p id="accuracy-rate" class="value">0%</p>
+                    <div class="progress-indicator-container">
+                        <div class="progress-bar-wrapper">
+                        <div id="accuracy-progress-bar" class="progress-bar"></div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="image-comparison-section data-card">
+                <div class="data-card-header">
+                    <h3>Comparativo Visual de Peças</h3>
+                </div>
+                <div class="image-comparison-grid">
+                    <div class="image-card expected-piece">
+                    <h4>Peça Esperada (via Sistema/URL)</h4>
+                    <img id="img-expected" src="../img/placeholder-expected.png" alt="Imagem da Peça Esperada">
+                    </div>
+                    <div class="image-card read-piece">
+                    <h4>Peça Lida (via Câmera CLP)</h4>
+                    <img id="img-read" src="../img/placeholder-read.png" alt="Imagem da Peça Lida">
+                    </div>
+                </div>
+                 <div id="comparison-status-indicator" class="comparison-status" style="display: none;"> <p id="comparison-status-text">Status</p>
+                </div>
+            </section>
+        </div>
+
+        <div class="sidebar-column">
+             <aside class="additional-info-card data-card">
+                <div class="data-card-header">
+                    <h3>Detalhes da Operação</h3>
+                    </div>
+                <p><strong>Tipo de Peça:</strong> <span id="piece-type-details">N/D</span></p>
+                <p><strong>Linha de Produção:</strong> <span id="production-line-details">Linha Alpha</span></p>
+                <p><strong>Operador Atual:</strong> <span id="operator-details">Sistema</span></p>
+                <button onclick="requestNewScan()" style="margin-top: 1rem; padding: 0.5rem 1rem; background-color: var(--lummen-primary); color: white; border: none; border-radius: var(--border-radius-sm); cursor: pointer; width: 100%;">Forçar Nova Leitura</button>
+            </aside>
+
+            <section class="event-log-card data-card">
+                <div class="data-card-header">
+                    <h3>Log de Eventos Recentes</h3>
+                    </div>
+                <table class="history-log-table">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Evento</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="event-log-body">
+                        <tr>
+                            <td>--:--:--</td>
+                            <td>Nenhum evento recente</td>
+                            <td><span class="status-indicator"></span>-</td>
+                        </tr>
+                        </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+  </main>
+  
+  <footer>
+    <p>&copy; <span id="current-year"></span> Lummen Systems. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Captura os parâmetros da URL
+    const params = new URLSearchParams(window.location.search);
+    const tipo = params.get('tipo') || 'peças'; // Default para 'peças'
+
+    // Exemplos de valores; você deve substituir por dados reais vindos do seu sistema
+    // Adicionei mais dados para os novos campos
+    const exemplos = {
+      parafusos: { valid: 120, invalid: 5, readImg: '../img/parafuso-read.png', expectedImg: '../img/parafuso-expected.png', productionLine: 'Linha P01', operator: 'Ana Silva' },
+      porcas:    { valid: 95,  invalid: 2, readImg: '../img/porca-read.png',    expectedImg: '../img/porca-expected.png', productionLine: 'Linha P02', operator: 'Carlos Luz' },
+      arruelas:  { valid: 78,  invalid: 10,readImg: '../img/arruela-read.png',  expectedImg: '../img/arruela-expected.png', productionLine: 'Linha A05', operator: 'Sistema CLP' },
+      default:   { valid: 0,   invalid: 0, readImg: '../img/placeholder-read.png', expectedImg: '../img/placeholder-expected.png', productionLine: 'N/A', operator: 'N/A'}
+    };
+
+    const data = exemplos[tipo] || exemplos.default;
+
+    // Preenche os elementos na página
+    const tipoCapitalized = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+    document.getElementById('page-title').innerText = `Resultados da Inspeção – ${tipoCapitalized}`;
+    document.getElementById('piece-type-details').innerText = tipoCapitalized;
+    
+    // Atualiza a hora da última atualização
+    const now = new Date();
+    document.getElementById('last-updated-time').innerText = `Última atualização: ${now.toLocaleTimeString('pt-BR')}`;
+
+    // KPIs
+    const validCount = data.valid;
+    const invalidCount = data.invalid;
+    const totalCount = validCount + invalidCount;
+    const accuracyRate = totalCount > 0 ? ((validCount / totalCount) * 100).toFixed(1) : 0;
+
+    document.getElementById('valid-count').innerText = validCount;
+    document.getElementById('invalid-count').innerText = invalidCount;
+    document.getElementById('total-count').innerText = totalCount;
+    document.getElementById('accuracy-rate').innerText = `${accuracyRate}%`;
+
+    // Barra de Progresso da Taxa de Acerto
+    const progressBar = document.getElementById('accuracy-progress-bar');
+    progressBar.style.width = `${accuracyRate}%`;
+    progressBar.innerText = `${accuracyRate}%`;
+    if (accuracyRate < 50) progressBar.className = 'progress-bar very-low';
+    else if (accuracyRate < 80) progressBar.className = 'progress-bar low';
+    else progressBar.className = 'progress-bar';
+
+
+    // Imagens
+    document.getElementById('img-read').src = data.readImg || '../img/placeholder-read.png';
+    document.getElementById('img-expected').src = data.expectedImg || '../img/placeholder-expected.png';
+    
+    // Placeholder para o caminho das imagens caso não existam
+    document.getElementById('img-read').onerror = function() { this.src='../img/placeholder-read.png'; console.warn(`Imagem não encontrada: ${data.readImg}`) };
+    document.getElementById('img-expected').onerror = function() { this.src='../img/placeholder-expected.png'; console.warn(`Imagem não encontrada: ${data.expectedImg}`) };
+
+
+    // Detalhes da Operação
+    document.getElementById('production-line-details').innerText = data.productionLine || 'N/D';
+    document.getElementById('operator-details').innerText = data.operator || 'N/D';
+
+    // Status de Comparação (Lógica de exemplo - idealmente viria do backend)
+    const statusIndicator = document.getElementById('comparison-status-indicator');
+    const statusText = document.getElementById('comparison-status-text');
+    // Simulação: Se houver alguma peça inválida, consideramos um mismatch para este exemplo.
+    // Numa aplicação real, você teria uma flag específica para o match da última peça.
+    if (data.readImg && data.expectedImg && data.readImg !== '../img/placeholder-read.png') { // Só mostra se tivermos imagens reais
+        // Esta é uma simulação. A lógica de "match" real dependeria de se a peça lida é a esperada.
+        // Para este exemplo, se a peça lida for igual à esperada (pelo nome do arquivo), é um match.
+        // Você precisaria de uma lógica mais robusta ou um dado do backend.
+        let isMatch = data.readImg.includes(tipo.slice(0, -1)) && invalidCount === 0; // Ex: parafuso-read.png contém 'parafuso'
+
+        if (totalCount > 0) { // Só mostra o status se houver processamento
+            if (isMatch) { // Condição de exemplo para match
+                statusText.innerText = 'Peça Lida CORRESPONDE à Esperada';
+                statusIndicator.className = 'comparison-status match';
+            } else {
+                statusText.innerText = 'Peça Lida NÃO CORRESPONDE à Esperada ou Há Inválidas';
+                statusIndicator.className = 'comparison-status mismatch';
+            }
+            statusIndicator.style.display = 'block';
+        }
+    }
+
+
+    // Função de placeholder para o botão
+    function requestNewScan() {
+      alert('Funcionalidade "Forçar Nova Leitura" a ser implementada.');
+      // Aqui você chamaria a lógica de backend para iniciar uma nova leitura.
+      // E, em seguida, atualizaria a página ou os dados via AJAX/Fetch.
+      // Exemplo:
+      // statusText.innerText = 'Aguardando nova leitura...';
+      // statusIndicator.className = 'comparison-status processing'; // uma nova classe CSS para "processando"
+      // statusIndicator.style.display = 'block';
+    }
+
+    // Exemplo de como popular o Log de Eventos (simulação)
+    const eventLogBody = document.getElementById('event-log-body');
+    const sampleLogs = [
+        { time: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), event: `Inspeção de ${tipoCapitalized} iniciada`, status: 'processando' },
+        { time: new Date(now.getTime() - 2000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), event: 'Câmera CLP ativada', status: 'info' },
+        { time: new Date(now.getTime() - 5000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), event: 'Sistema iniciado', status: 'info' },
+    ];
+    if (totalCount > 0) {
+        sampleLogs.unshift({ time: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), event: `${validCount} válidas, ${invalidCount} inválidas`, status: invalidCount > 0 ? 'invalid' : 'valid' })
+    }
+
+    eventLogBody.innerHTML = ''; // Limpa o placeholder
+    sampleLogs.slice(0, 5).forEach(log => { // Limita a 5 logs
+        const row = eventLogBody.insertRow();
+        row.insertCell().textContent = log.time;
+        row.insertCell().textContent = log.event;
+        const statusCell = row.insertCell();
+        const indicator = document.createElement('span');
+        indicator.className = `status-indicator ${log.status === 'processando' || log.status === 'info' ? 'total' : log.status}`; // Adapta as classes de status
+        statusCell.appendChild(indicator);
+        statusCell.appendChild(document.createTextNode(log.status.charAt(0).toUpperCase() + log.status.slice(1)));
+    });
+
+  </script>
+</body>
+</html>

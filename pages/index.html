@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <title>Lummen - Home</title>
+     <link rel="icon" href="../img/logo-estatica.png" type="image/x-icon">
+</head>
+<body>
+     <header>
+    <a id="Logo" href="../pages/index.html" class="logo-link">
+      <img id="logo-img" class="static-img" src="../img/logo-estatica.png" alt="Logo Estática Lummen">
+      <img id="logo-gif" class="gif-img" src="../img/logo.gif" alt="Logo Animada Lummen">
+      <h1>Lummen</h1>
+    </a>
+    <nav>
+      <a href="../pages/tarefas.html" class="task-link menu-link">
+        <img class="static-img" src="../img/chave-estatica.png" alt="Ícone Chave Estática">
+        <img class="gif-img" src="../img/chave.gif" alt="Ícone Chave Animada">
+        Gerenciar Tarefas
+      </a>
+      <a href="../pages/actions.html" class="action-link menu-link">
+        <img class="static-img" src="../img/engine-estatica.png" alt="Ícone Engine Estática">
+        <img class="gif-img" src="../img/engine.gif" alt="Ícone Engine Animada">
+        Gerenciar Ações
+      </a>
+      </nav>
+  </header>
+
+    
+    <div class="scroll-helper" style="padding-top: 100px; text-align: center; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f0f0f0;">
+ 
+        <h2>Bem-vindo à Lummen</h2>
+        <p>Role para baixo para escolher o tipo de item de sua preferência.</p>
+        <span style="font-size: 3rem; margin-top: 20px;">&darr;</span>
+        <img src="../img/parafuso-sem-bg.png" class="img-solta" alt="parafuso-sem-bg">
+        <img src="../img/porca-sem-bg.png" class="img-solta-2" alt="porca-sem-bg">
+    </div>
+
+    <div class="corpo">
+        <div onclick="redirecionar('parafusos')" class="card-container-wrapper"> <div class="card anim-scroll"> <img src="../img/bg-parafuso-desenho.jpg" alt="Casal de peças de xadrez, rei e rainha, lado a lado.">
+                <div class="card-content">
+                    <h3>Parafusos</h3>
+                    <p>Ao selecionar esse campo, somente parafusos serão aceitos ao passarem pelo sensor.</p>
+                </div>
+            </div>
+        </div>
+
+         <div onclick="redirecionar('porcas')" class="card-container-wrapper"> <div class="card anim-scroll"> <img src="../img/porca-card.png" alt="Casal de peças de xadrez, rei e rainha, lado a lado.">
+                <div class="card-content">
+                    <h3>Porcas</h3>
+                    <p>Ao selecionar esse campo, somente porcas serão aceitas ao passarem pelo sensor.</p>
+                </div>
+            </div>
+        </div>
+
+         <div onclick="redirecionar('arruelas')" class="card-container-wrapper"> <div class="card anim-scroll"> <img src="../img/arruela-card.png" alt="Casal de peças de xadrez, rei e rainha, lado a lado.">
+                <div class="card-content">
+                    <h3>Arruelas</h3>
+                    <p>Ao selecionar esse campo, somente arruelas serão aceitas ao passarem pelo sensor.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div style="height: 50vh; background-color: #e0e0e0;"></div>
+
+      
+  <footer>
+    <p>&copy; <span id="current-year"></span> Lummen Systems. Todos os direitos reservados.</p>
+  </footer>
+
+    <script src="../script.js"></script>
+    <script>
+        function redirecionar(tipo){
+          window.location.href = `../pages/tarefas.html?tipo=${tipo}`;
+        }
+    </script>
+</body>
+</html>

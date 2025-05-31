@@ -1,0 +1,458 @@
+/* --- SEUS ESTILOS EXISTENTES (COM CORREÇÕES) --- */
+body {
+    text-decoration: none; /* Geralmente não é necessário no body, mas sim em 'a' se quiser remover sublinhados */
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* Mudei para 400 (regular) como base, 500 é Medium */
+    font-style: normal;
+    /* font-variation-settings: "wdth" 100; /* Pode manter se estiver usando fonte variável Roboto Flex */
+    overflow-x: hidden;
+    margin: 0;
+    background-color: #f4f4f4; /* Um cinza claro para o fundo geral */
+}
+
+.gif-img {
+    display: none;
+}
+
+.static-img {
+    display: inline-block;
+}
+
+
+    header {
+      background-color:#ffffff;
+      color: black;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      margin-bottom: -100px;
+    }
+
+    header .logo-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: black;
+    }
+
+    header .logo-link #logo-img { display: block; }
+    header .logo-link #logo-gif { display: none; }
+    header .logo-link:hover #logo-img { display: none; }
+    header .logo-link:hover #logo-gif { display: block; }
+
+    header #logo-img, header #logo-gif {
+      height: 40px;
+      width: 40px;
+      margin-right: 0.75rem;
+      transition: transform var(--transition-speed);
+    }
+    header .logo-link:hover #logo-gif {
+        transform: scale(1.1);
+    }
+
+     h1 { 
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    header nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    header .menu-link {
+      color: black;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius-sm);
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+
+    header .menu-link img {
+      height: 20px;
+      margin-right: 0.5rem;
+      filter: invert(90%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(100%) contrast(90%); /* Adequar ícones para fundo escuro */
+    }
+    
+    header .menu-link .static-img { display: block; }
+    header .menu-link .gif-img { display: none; }
+    header .menu-link:hover .static-img { display: none; }
+    header .menu-link:hover .gif-img { display: block; }
+
+    header .menu-link:hover, header .menu-link.active {
+       transform: scale(1.05);
+    }
+    header .menu-link:hover img {
+        filter: none; 
+    }
+
+
+.corpo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Alterado de 100vw para 100% para melhor compatibilidade com padding do body */
+    min-height: 80vh; /* Reduzido para permitir visualização com header e footer/scroll */
+    flex-direction: row;
+    padding: 80px 20px 40px; /* Padding para não ficar colado no header e dar espaço */
+    box-sizing: border-box;
+    gap: 30px;
+}
+
+/* Se houver H3 ou P diretos em .corpo que não são parte de outros componentes */
+.corpo > h3, .corpo > p {
+    width: 70vw; /* Ajustado */
+    max-width: 800px; /* Adicionado max-width */
+    letter-spacing: 1px; /* Ajustado */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+    footer {
+        text-align: center;
+        padding: 1.5rem;
+        background-color: var(--neutral-light);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-top: auto; /* Empurra para o final da página */
+    }
+
+/* --- ESTILOS DO CARD MODERNO --- */
+:root {
+    --card-bg-color: #2c3e50; /* Um azul escuro/cinza ardósia */
+    --h3-card-color: #1abc9c; /* Verde água vibrante */
+    --p-card-color: #ecf0f1; /* Cinza claro/quase branco */
+    --shadow-card-color: rgba(44, 62, 80, 0.3); /* Sombra baseada no bg do card */
+    --glow-card-color: rgba(26, 188, 156, 0.4); /* Cor do brilho sutil (h3) */
+}
+
+.card-container-wrapper { /* Novo wrapper para centralizar e dar perspectiva se necessário */
+    /* perspective: 1000px; */ /* Para animações 3D no card (opcional) */
+    padding: 20px 0; /* Espaço vertical em volta do card */
+}
+
+.card {
+    font-family: "Roboto", sans-serif; /* Garantindo a fonte correta */
+    background: linear-gradient(145deg, var(--card-bg-color), #3e5770); /* Gradiente sutil */
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-card-color);
+    overflow: hidden;
+    
+    width: 340px; /* Mais vertical */
+    max-width: 90vw; /* Para responsividade em telas menores */
+    min-height: 450px;
+    opacity: 0;
+    transform: translateY(80px) scale(0.95);
+    transition: opacity 3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                transform 3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                box-shadow 0.4s ease-out; /* Adicionada transição para sombra */
+    
+    position: relative;
+}
+
+.card.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.card:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 20px 45px var(--shadow-card-color), 0 0 20px var(--glow-card-color);
+}
+
+.card img {
+    width: 100%;
+    height: 220px; /* Altura fixa para a imagem do card */
+    object-fit: cover;
+    display: block;
+    border-bottom: 4px solid var(--h3-card-color); /* Detalhe visual */
+}
+
+.card-content {
+    padding: 30px 25px; /* Aumentei um pouco o padding */
+    text-align: left; /* Alterei para left para textos mais longos, mas pode ser center */
+}
+
+.card-content h3 {
+    color: var(--h3-card-color);
+    font-size: 1.7rem; /* Ajustado para Roboto */
+    font-weight: 700; /* Bold */
+    margin-top: 0;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+    position: relative;
+    display: inline-block;
+}
+
+.card-content h3::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    background-color: var(--h3-card-color);
+    bottom: -6px; /* Ajuste de posição */
+    left: 0; /* Alinhado à esquerda */
+    /* transform: translateX(-50%); */ /* Removido para alinhar à esquerda */
+    transition: width 0.4s ease-in-out;
+}
+
+.card:hover .card-content h3::after {
+    width: 60%; /* Expande a partir da esquerda */
+}
+
+.card-content p {
+    color: var(--p-card-color);
+    font-size: 0.9rem; /* Ajustado para Roboto */
+    font-weight: 400; /* Regular */
+    line-height: 1.7;
+    margin-bottom: 0;
+    letter-spacing: 0.2px; /* Reduzido o letter-spacing do P */
+    width: auto; /* Para resetar o width de .corpo p */
+}
+
+.img-solta{
+    width: 700px;
+    position: absolute;
+    transform: translateX(-200%);
+    margin-top: 40px;
+    margin-left: 100px;
+    animation: slideFadeInLeft 2s ease forwards;
+  opacity: 0;
+}
+
+.img-solta-2{
+    transform: translateX(200%);
+    position: absolute;
+     animation: slideFadeInRight 2s ease forwards;
+  opacity: 0;
+}
+
+@keyframes slideFadeInLeft {
+  to {
+     transform: translateX(-650px);
+    opacity: 1;
+  }
+}
+
+/* Animação para imagem da direita: vem da direita e aparece */
+@keyframes slideFadeInRight {
+  to {
+    transform: translateX(650px);
+    opacity: 1;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Para Tablets e Telas Menores (ex: até 1024px) */
+@media (max-width: 1024px) {
+    header {
+        gap: 30px; /* Reduz o espaço entre os itens do menu */
+        padding: 10px 15px; /* Ajusta o padding do header */
+    }
+
+    .img-solta{
+    width: 500px;
+    transform: translateX(-500px);
+    margin-top: 400px;
+    rotate: 0deg;
+    transition: 1s;
+    margin-left: 100px;
+    }
+
+    .img-solta-2{
+        transform: translateX(650px);
+        position: absolute;
+       margin-right: 200px;
+    }
+
+
+    .corpo > h3 {
+        font-size: 1.8em; /* Se você tiver H3 direto em .corpo */
+    }
+    .corpo > p {
+        font-size: 0.95em; /* Se você tiver P direto em .corpo */
+    }
+
+    .card {
+        width: 320px; /* Pode manter ou ajustar um pouco */
+    }
+}
+
+
+/* Para Tablets em modo Retrato e Celulares Grandes (ex: até 768px) */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column; /* Empilha os itens do header */
+        gap: 15px;
+        padding: 15px;
+        align-items: flex-start; /* Alinha itens à esquerda quando empilhados */
+    }
+
+    #Logo {
+        margin-right: 0; /* Remove a margem que empurrava os links */
+        margin-bottom: 10px; /* Espaço abaixo do logo quando empilhado */
+        border-bottom: 1px solid gray;
+       
+    }
+    
+    #Logo h1 {
+        font-size: 2em;
+    }
+
+    header a {
+        font-size: 1em; /* Pode voltar ao tamanho normal se estiverem em linhas separadas */
+        padding: 8px 10px; /* Ajusta padding dos links */
+        width: 100%; /* Faz os links ocuparem a largura */
+        box-sizing: border-box;
+    }
+    header a { /* Para não afetar o link do logo */
+        justify-content: center; /* Centraliza conteúdo do link (img + texto) */
+    }
+
+
+    .scroll-helper {
+        min-height: auto; /* Permite que o conteúdo defina a altura */
+        padding: 80px 20px 40px; /* Ajusta padding */
+    }
+
+    .scroll-helper h2 {
+        font-size: 1.8em;
+    }
+
+    .corpo {
+        padding: 60px 15px 30px; /* Reduz padding do corpo */
+        min-height: auto; /* Altura baseada no conteúdo */
+    }
+
+    .corpo > h3, .corpo > p {
+        width: 90vw; /* Ocupa mais da largura da tela */
+        letter-spacing: 0.5px;
+    }
+    .corpo > h3 {
+        font-size: 1.6em;
+    }
+    .corpo > p {
+        font-size: 0.9em;
+    }
+
+    .card-container-wrapper {
+        width: 100%; /* O wrapper do card ocupa toda a largura disponível */
+    }
+
+    .card {
+        width: 90vw; /* Card ocupa boa parte da tela */
+        /* max-width: 340px;  Ainda respeita o max-width se 90vw for maior */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card img {
+        height: 200px; /* Pode ajustar a altura da imagem do card */
+    }
+
+    .card-content {
+        padding: 25px 20px; /* Ajusta padding interno do card */
+    }
+
+    .card-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .card-content p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+}
+
+
+/* Para Celulares (ex: até 480px) */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px; /* Pode reduzir a fonte base para telas bem pequenas, afetando unidades relativas como rem/em */
+    }
+
+    header {
+        gap: 10px; /* Menor espaço no header empilhado */
+    }
+    #Logo h1 {
+        font-size: 1.2em;
+    }
+     header a img {
+        width: 24px;
+        height: 24px;
+    }
+    header a {
+        font-size: 0.9em; /* Links do menu um pouco menores */
+    }
+
+    .scroll-helper h2 {
+        font-size: 1.5em;
+    }
+    .scroll-helper p {
+        font-size: 0.9em;
+    }
+
+    .corpo {
+        padding: 50px 10px 20px; /* Padding ainda menor */
+    }
+
+    .corpo > h3 {
+        font-size: 1.4em;
+    }
+    .corpo > p {
+        font-size: 0.85em;
+    }
+
+    .card {
+        width: 92vw; /* Quase toda a largura da tela */
+        border-radius: 15px; /* Bordas um pouco menores */
+    }
+
+    .card img {
+        height: 180px; /* Imagem do card ainda menor */
+        border-bottom-width: 3px;
+    }
+
+    .card-content {
+        padding: 20px 15px;
+    }
+
+    .card-content h3 {
+        font-size: 1.3rem;
+    }
+
+    .card-content p {
+        font-size: 0.8rem;
+    }
+    
+    /* Ajuste no efeito de hover para mobile (hover não é primário em touch) */
+    /* Você pode querer desabilitar ou simplificar alguns hovers em touch */
+    .card:hover {
+        transform: translateY(0) scale(1); /* Remove o efeito de levantar no hover para mobile */
+        box-shadow: 0 10px 30px var(--shadow-card-color); /* Volta para a sombra padrão */
+    }
+    .card:hover .card-content h3::after {
+        width: 0; /* Desabilita animação do sublinhado no hover do h3 em mobile */
+    }
+}
